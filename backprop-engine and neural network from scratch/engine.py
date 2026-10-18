@@ -51,7 +51,7 @@ class Value:
         out = Value((pos_exp - neg_exp) / (pos_exp + neg_exp), children=(self,), op='tanh')
 
         def backward():
-            self.grad+=(1.0-out**2)*out.grad
+            self.grad+=(1.0-out.data**2)*out.grad
 
         out._backward=backward
         return out
