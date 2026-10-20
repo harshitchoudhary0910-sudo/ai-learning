@@ -72,47 +72,47 @@ class MLP:
 
 
         
-nn=MLP(2,[4,4,2])
-#print(len(nn.parameters()))
+# nn=MLP(2,[4,4,2])
+# #print(len(nn.parameters()))
 
-inputs=[[1,0],[0,1],[1,1],[0,0]]
-outputs=[1,1,0,0]
+# inputs=[[1,0],[0,1],[1,1],[0,0]]
+# outputs=[1,1,0,0]
 
-nn = MLP(2, [4, 4, 2])
+# nn = MLP(2, [4, 4, 2])
 
-inputs = [[1, 0], [0, 1], [1, 1], [0, 0]]
-outputs = [1, 1, 0, 0]
+# inputs = [[1, 0], [0, 1], [1, 1], [0, 0]]
+# outputs = [1, 1, 0, 0]
 
-def train(inputs, epochs=1000):
-    for epoch in range(epochs):
-        # 1. Forward pass and calculate total loss
-        loss = 0
-        for i in range(len(inputs)):
-            out = nn(inputs[i])
-            loss += (out[0] - outputs[i])**2
-            loss += (out[1] - outputs[i])**2
+# def train(inputs, epochs=1000):
+#     for epoch in range(epochs):
+#         # 1. Forward pass and calculate total loss
+#         loss = 0
+#         for i in range(len(inputs)):
+#             out = nn(inputs[i])
+#             loss += (out[0] - outputs[i])**2
+#             loss += (out[1] - outputs[i])**2
 
-        # 2. Reset gradients BEFORE backpropagation
-        for p in nn.parameters():
-            p.grad = 0
+#         # 2. Reset gradients BEFORE backpropagation
+#         for p in nn.parameters():
+#             p.grad = 0
 
-        # 3. Backpropagation
-        loss.backward()
+#         # 3. Backpropagation
+#         loss.backward()
 
-        # 4. Update parameters
-        for p in nn.parameters():
-            p.data += -0.1 * p.grad
+#         # 4. Update parameters
+#         for p in nn.parameters():
+#             p.data += -0.1 * p.grad
 
-        if epoch % 10 == 0:
-            print(f"Epoch {epoch}, Loss: {loss.data}")
+#         if epoch % 10 == 0:
+#             print(f"Epoch {epoch}, Loss: {loss.data}")
 
-train(inputs)
+# train(inputs)
 
-print("Final outputs after training:" )
+# print("Final outputs after training:" )
 
-for i in range(len(inputs)):
-    out = nn(inputs[i])
-    print(f"Input: {inputs[i]}, Output: {[o.data for o in out]}")
+# for i in range(len(inputs)):
+#     out = nn(inputs[i])
+#     print(f"Input: {inputs[i]}, Output: {[o.data for o in out]}")
 
  
 

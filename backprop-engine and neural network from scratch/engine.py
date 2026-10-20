@@ -85,22 +85,31 @@ class Value:
 
     def backward(self):
 
-        # topological order all of the children in the graph
+        # Build topological order iteratively to avoid RecursionError
         topo = []
         visited = set()
-        def build_topo(v):
+        stack = [(self, False)]
+
+        while stack:
+            v, processed = stack.pop()
+
+            if processed:
+                topo.append(v)
+                continue
+
             if v not in visited:
                 visited.add(v)
-                for child in v._children:
-                    build_topo(child)
-                topo.append(v)
-        build_topo(self)
+                stack.append((v, True))
 
-        # go one variable at a time and apply the chain rule to get its gradient
-        self.grad = 1
+                for child in v._children:
+                    if child not in visited:
+                        stack.append((child, False))
+
+        # Apply the chain rule in reverse topological order
+        self.grad = 1.0
+
         for v in reversed(topo):
             v._backward()
-
     
     def __neg__(self): # -self
         return self * -1
