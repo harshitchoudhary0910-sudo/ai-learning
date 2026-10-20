@@ -6,9 +6,16 @@ class Neuron:
         self.weights=[Value(random.uniform(-1,1)) for _ in range(nin)]
         self.bias=Value(0)
 
-    def __call__(self,x):
+    def __call__(self,x,activation="tanh"):
         out=sum(x1*w for x1,w in zip(x,self.weights))+self.bias
-        return out.tanh()
+        if activation == "tanh":
+            return out.tanh()
+        elif activation == "sigmoid":
+            return out.sigmoid()
+        elif activation == "relu":
+            return out.relu()
+        else:
+            raise ValueError("Unsupported activation function")
 
     def parameters(self):
         return self.weights+[self.bias]
@@ -20,8 +27,8 @@ class Layer:
     def __init__(self,nn,nin):
         self.neurons=[Neuron(nin) for _ in range(nn)]
 
-    def __call__(self,x):
-        out=[n(x) for n in self.neurons]
+    def __call__(self,x,activation="tanh"):
+        out=[n(x,activation=activation) for n in self.neurons]
         return out
 
     def parameters(self):
@@ -38,9 +45,21 @@ class MLP:
                        
                            
 
-    def __call__(self, x):
-        for layer in self.layers:
-            x = layer(x)
+    def __call__(self, x, activation=None):
+        if activation is None:
+            activation=["tanh"]*len(self.layers)
+        elif(isinstance(activation,str)):
+            activation=[activation]*len(self.layers)
+        elif(isinstance(activation,list)):
+            if(len(activation)!=len(self.layers)):
+                raise ValueError(
+                    f"Expected {len(self.layers)} activations, "
+                    f"but got {len(activation)}"
+                )
+        else :
+            raise TypeError("activation must be None , String or a list of strings")
+        for layer,act in zip(self.layers,activation):
+            x = layer(x, activation=act)
         return x
 
     def parameters(self):
